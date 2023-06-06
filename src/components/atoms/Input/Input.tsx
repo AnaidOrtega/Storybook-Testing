@@ -7,24 +7,15 @@ const { Title, Text } = Typography;
 export interface InputProps extends AntdInputProps {
   label?: string;
   required?: boolean;
+  error?: string;
 }
 
-export const Input: FC<InputProps> = ({ label, placeholder, id, required }) => {
+export const Input: FC<InputProps> = ({ label, placeholder, id, error, onChange }) => {
   const [value, setValue] = useState("");
-  const [error, setError] = useState<string | undefined>(undefined);
-
-  const handleBlur = () => {
-    if (required) {
-      if (value === "") {
-        setError("This field is required");
-      } else {
-        setError(undefined);
-      }
-    }
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    if (onChange) onChange(e)
   };
 
   return (
@@ -35,7 +26,6 @@ export const Input: FC<InputProps> = ({ label, placeholder, id, required }) => {
         size="large"
         value={value}
         data-testid={id}
-        onBlur={handleBlur}
         onChange={handleChange}
         prefix={<UserOutlined />}
         placeholder={placeholder}
